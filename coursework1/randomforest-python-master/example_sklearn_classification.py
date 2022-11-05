@@ -35,7 +35,7 @@ def img_test(forest, feature_extractor, points, colors, filename, size=512,
         col = tuple(colors[int(r)])
         cv2.circle(img, tuple(p), radius + 1, (0, 0, 0), thickness=-1)
         cv2.circle(img, tuple(p), radius, col, thickness=-1)
-    print(img)
+
     cv2.imwrite(filename, img)
 
 
@@ -52,19 +52,23 @@ for c in range(len(theta)):
     points[c * len(t):(c + 1) * len(t), 0] = t ** 2 * np.cos(t + theta[c])  # x
     points[c * len(t):(c + 1) * len(t), 1] = t ** 2 * np.sin(t + theta[c])  # y
     responses[c * len(t):(c + 1) * len(t)] = c
+print(points.shape)
+print(responses.shape)
 
 for learner in weakLearner.__all__:
     test_class = getattr(weakLearner, learner)()
     params = {'max_depth': None,
               'min_samples_split': 2,
               'n_jobs': 1,
-              'n_estimators': 100}
+              'n_estimators': 1000}
 
     print(str(learner))
 
     forest = ensemble.RandomForestClassifier(**params)
     feature_extractor = FeatureExtractor(test_class, n_features=1000)
     features = feature_extractor.fit_transform(points)
+    print(feature_extractor.tests[0])
+    print(feature_extractor.tests[1])
     forest.fit(features, responses)
 
     img_test(forest, feature_extractor, points, colors,
@@ -73,3 +77,6 @@ for learner in weakLearner.__all__:
     img_test(forest, feature_extractor, points, colors,
              'img/classification_forest_sklearn_' + str(learner) + '_hard.png',
              proba=False)
+    
+    test_features = feature_extractor.apply_all(points)
+    print(forest.score(test_features,responses))
