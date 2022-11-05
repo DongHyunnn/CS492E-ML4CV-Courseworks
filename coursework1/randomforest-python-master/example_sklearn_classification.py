@@ -35,7 +35,7 @@ def img_test(forest, feature_extractor, points, colors, filename, size=512,
         col = tuple(colors[int(r)])
         cv2.circle(img, tuple(p), radius + 1, (0, 0, 0), thickness=-1)
         cv2.circle(img, tuple(p), radius, col, thickness=-1)
-
+    print(img)
     cv2.imwrite(filename, img)
 
 

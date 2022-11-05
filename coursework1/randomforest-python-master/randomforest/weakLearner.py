@@ -40,7 +40,7 @@ class AxisAligned(WeakLearner):
         return point[int(test[0])] > test[1]
 
     def run_all(self, points, test):
-        return np.array(list(map(lambda test: points[:, test[0]] > test[1],
+        return np.array(list(map(lambda test: points[:, int(test[0])] > test[1],
                                  test))).T
 
 
